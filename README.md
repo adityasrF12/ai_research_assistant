@@ -1,38 +1,37 @@
-# AI Research Assistant: Local RAG Pipeline
+# AI Research Assistant: Containerized RAG API
 
-A Retrieval-Augmented Generation (RAG) system developed to facilitate technical analysis of academic research papers. This project utilizes LangChain for orchestration and Ollama for local Large Language Model (LLM) inference.
+An industry-standard Retrieval-Augmented Generation (RAG) system developed to facilitate technical analysis of academic research papers. This project has evolved from a basic script into a scalable, Dockerized FastAPI service optimized for local LLM inference.
 
 ## Technical Architecture
 
-The system implements a standard RAG architecture with specific optimizations for academic document structures:
+The system implements a production-ready RAG architecture with a focus on modularity and high-performance retrieval:
 
-* **Orchestration Framework:** LangChain (RetrievalQA)
+* **API Framework:** FastAPI (Asynchronous request handling)
+* **Orchestration:** LangChain (RetrievalQA chain)
 * **Inference Engine:** Ollama (Llama 3)
-* **Vector Database:** ChromaDB (Persistent)
-* **Embedding Model:** Ollama Embeddings (Llama 3)
-* **Document Processing:** PyPDFLoader
+* **Vector Database:** ChromaDB (Persistent storage layer)
+* **Infrastructure:** Docker & Docker Compose (Containerized deployment)
+* **Document Processing:** PyPDFLoader with Recursive Character Splitting
 
-## Key Implementation Details
 
-### Context Preservation
-To maintain the integrity of complex technical arguments and data tables, a RecursiveCharacterTextSplitter was configured with a chunk size of 2000 characters and a 300-character overlap. This prevents the loss of context across page breaks and section headers.
 
-### Retrieval Optimization
-The system utilizes Maximum Marginal Relevance (MMR) for document retrieval. This ensures that the context provided to the LLM is both relevant and diverse, effectively mitigating the "Bibliography Trap" where citation lists can dominate search results based on keyword density.
+## Key Features
 
-### Grounding and Prompt Engineering
-A custom prompt template is utilized to ground the model in the provided context. The instructions prioritize research findings and explicitly direct the model to disregard bibliographic noise and acknowledge information gaps to prevent hallucinations.
+* **Containerized Environment:** Fully Dockerized setup ensuring consistent deployment across different environments.
+* **Context Preservation:** Utilizes `RecursiveCharacterTextSplitter` (chunk size: 2000, overlap: 300) to maintain technical context across complex PDF structures.
+* **Database Management:** Includes a dedicated `/clear` endpoint to programmatically reset and re-initialize the vector database.
+* **Source Transparency:** The API response includes specific metadata, citing the exact file name, page number, and text snippet used to generate the answer.
 
-## Installation and Usage
+## Installation & Setup
 
 ### Prerequisites
 1. Install [Ollama](https://ollama.com).
 2. Pull the required model: `ollama pull llama3`.
+3. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 
-### Setup
-1. Clone the repository.
-2. Install the required dependencies:
+### Deployment
+1. Clone the repository and navigate to the root directory.
+2. Place your target PDF research papers inside the `/data` directory.
+3. Launch the service using Docker Compose:
    ```bash
-   pip install -r requirements.txt
-3. Create a directory named data in the root of the project
-4. Place your target PDF research papers inside the /data directory. The system is configured to automatically ingest and index all PDF files within this folder
+   docker-compose up --build
