@@ -1,11 +1,11 @@
-
 venv/
 __pycache__/
 *.pyc
 
 data/
-research_db/
-
+.env
 
 .DS_Store
 Thumbs.db
+
+research_db/
